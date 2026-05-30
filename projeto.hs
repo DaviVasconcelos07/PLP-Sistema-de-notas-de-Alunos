@@ -4,6 +4,38 @@ import Data.Char (toUpper)
 
 
 
+
+
+
+--tipos de dados
+data Prova = Prova
+    { valorNota :: Double  -- nota que o cara tirou
+    , pesoNota  :: Double  
+    } deriving (Show)
+
+data ProvaFinal = SemFinal         -- não precisou fazer
+               | Pendente                -- vai fazer mas ainda não fez
+               | Feita Double     -- nota dele
+               deriving (Show)
+
+data Disciplina = Disciplina
+    { nomeDisciplina  :: String   
+    , provas          :: [Prova]  
+    , pesoMediaFinal  :: Double   -- peso da média regular na conta final
+    , pesoProvaFinal  :: Double   -- peso da prova final na conta final
+    , mediaAprovacao  :: Double   -- nota mínima pra aprovação
+    } deriving (Show)
+
+data Aluno = Aluno
+    { nomeAluno   :: String                    
+    , disciplinas :: [(Disciplina, ProvaFinal)] -- disciplina + situação da final
+    } deriving (Show)
+
+
+
+
+
+
 -- funções auxiliares
 
 
