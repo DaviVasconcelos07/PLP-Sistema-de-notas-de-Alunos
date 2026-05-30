@@ -8,6 +8,8 @@ import Data.Char (toUpper)
 
 
 --tipos de dados
+
+
 data Prova = Prova
     { valorNota :: Double  -- nota que o cara tirou
     , pesoNota  :: Double  
@@ -37,6 +39,27 @@ data Aluno = Aluno
 
 
 -- funções auxiliares
+
+
+mediaPonderada :: [Prova] -> Double --recebe uma lista de provas e calcula a média ponderada
+mediaPonderada provas = sum (map (\p -> valorNota p * pesoNota p) provas)
+
+aprovadoDireto :: Disciplina -> Bool
+aprovadoDireto disciplina = mediaPonderada (provas disciplina) >= mediaAprovacao disciplina
+
+notaNecessaria :: Disciplina -> Double -- só faz sentido chamar isso se o aluno não for aprovado direto. tem que especificar no menu
+notaNecessaria disciplina = (mediaAprovacao disciplina - mediaPonderada (provas disciplina) * pesoMediaFinal disciplina) / pesoProvaFinal disciplina
+
+mediaLista :: [Double] -> Double
+mediaLista lista = sum lista / fromIntegral (length lista)
+
+mediaAluno :: Aluno -> Double
+mediaAluno aluno = mediaLista (map (\(d, _) -> mediaPonderada (provas d)) (disciplinas aluno))
+{- 
+    recebe um Aluno, extrai sua lista de (Disciplina, ProvaFinal),
+    desconsidera o ProvaFinal com (_), calcula a mediaPonderada de cada Disciplina,
+    e por fim tira a média dessas médias com mediaLista
+-}
 
 
 
