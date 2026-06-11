@@ -1,6 +1,6 @@
 --imports
 import Data.Char (toUpper)
-
+import Data.List (sortBy)
 
 
 
@@ -123,18 +123,42 @@ cria a disciplina e adiciona ela ao aluno correspondente, retornando a lista atu
 -}
 
 
+mostrarMediaGeral :: Alunos -> IO()
+mostrarMediaGeral alunos = do
+    print (mediaGeralNotas alunos)
+{- 
+    recebe a lista de alunos,
+    calcula a média geral das notas,
+    e mostra o resultado na tela
+-}
+
+
+ranking :: Alunos -> IO()
+ranking alunos = do
+    let ordenados =
+            sortBy (\a b -> compare (mediaAluno b) (mediaAluno a)) alunos
+
+    mapM_ (\a ->
+        putStrLn (nomeAluno a ++ " - " ++ show (mediaAluno a)))
+        ordenados
+{- 
+    recebe a lista de alunos,
+    ordena da maior média para a menor,
+    e mostra o ranking na tela
+-}
+
 
 -- funcionalidades
 
--- média ponderada configurável por disciplina
+-- ✅ média ponderada configurável por disciplina
 
--- Calcular Ranking de notas
+-- ✅Calcular Ranking de notas
 
 -- Calcular Porcentagem de Aprovação
 
--- Calcular e mostrar maior média
+-- ✅Calcular e mostrar maior média
 
--- Calcular média geral das notas
+-- ✅Calcular média geral das notas
 
 -- Calcular nota necessária na final
 
@@ -150,12 +174,12 @@ escolha letra alunos
         alunosAtualizados <- adicionarDisciplina alunos
         loop alunosAtualizados
    -- | toUpper letra == 'E' = editarMateria >> loop alunos
-   -- | toUpper letra == 'M' = mediaGeral >> loop alunos
+    | toUpper letra == 'M' = mostrarMediaGeral alunos >> loop alunos
     | toUpper letra == 'T' = maiorMedia alunos >> loop alunos
    -- | toUpper letra == 'P' = porcentagemAP >> loop alunos                           
    -- | toUpper letra == 'F' = notaNecessaria >> loop alunos
    -- | toUpper letra == 'D' = disMaisDificil >> loop alunos
-   -- | toUpper letra == 'R' = ranking >> loop alunos
+    | toUpper letra == 'R' = ranking alunos >> loop alunos
     | toUpper letra == 'S' = putStrLn "\nAté Mais!"
     | otherwise = putStrLn "\nResposta Inválida" >> loop alunos
 
