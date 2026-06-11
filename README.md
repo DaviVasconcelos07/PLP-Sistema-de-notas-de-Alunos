@@ -87,7 +87,7 @@ O projeto aplica os seguintes conceitos do paradigma funcional:
 - Davi de Lucena Vasconcelos
 - Antonio Farias Lopes Neto
 - Carlos Alberto Leal Do Nascimento
-- 
+- João Victor Fernandes Martins
 - 
 - 
 

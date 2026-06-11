@@ -61,6 +61,26 @@ mediaAluno aluno = mediaLista (map (\(d, _) -> mediaPonderada (provas d)) (disci
     e por fim tira a média dessas médias com mediaLista
 -}
 
+mediaGeralNotas :: [Aluno] -> Double
+mediaGeralNotas alunos =
+    mediaLista (map mediaAluno alunos)
+{-
+    recebe uma lista de Alunos,
+    calcula a média de cada aluno usando mediaAluno,
+    monta uma lista com essas médias,
+    e o caba tira a média geral com mediaLista
+-}
+
+
+maiorMedia :: [Aluno] -> Double
+maiorMedia alunos =
+    maximum (map mediaAluno alunos)
+{-
+    recebe uma lista de Alunos,
+    calcula a média de cada um com mediaAluno,
+    monta uma lista dessas médias,
+    e retorna a maior delas com maximum
+-}
 
 
 
