@@ -33,6 +33,8 @@ data Aluno = Aluno
     , disciplinas :: [(Disciplina, ProvaFinal)] -- disciplina + situação da final
     } deriving (Show)
 
+type Alunos = [Aluno]
+
 
 
 
@@ -61,7 +63,7 @@ mediaAluno aluno = mediaLista (map (\(d, _) -> mediaPonderada (provas d)) (disci
     e por fim tira a média dessas médias com mediaLista
 -}
 
-mediaGeralNotas :: [Aluno] -> Double
+mediaGeralNotas :: Alunos -> Double
 mediaGeralNotas alunos =
     mediaLista (map mediaAluno alunos)
 {-
@@ -72,14 +74,52 @@ mediaGeralNotas alunos =
 -}
 
 
-maiorMedia :: [Aluno] -> Double
-maiorMedia alunos =
-    maximum (map mediaAluno alunos)
+maiorMedia :: Alunos -> IO()
+maiorMedia alunos = do
+    print(maximum (map mediaAluno alunos))
 {-
     recebe uma lista de Alunos,
     calcula a média de cada um com mediaAluno,
     monta uma lista dessas médias,
     e retorna a maior delas com maximum
+-}
+
+adicionarAluno :: Alunos -> IO Alunos
+adicionarAluno alunos = do
+    putStrLn "\nNome do aluno:"
+    nome <- getLine
+    let novoAluno = Aluno { nomeAluno = nome, disciplinas = [] }
+    return (alunos ++ [novoAluno])
+{-
+recebe a lista de alunos, pede o nome, 
+cria um aluno sem disciplinas, concatena na lista atual retorna a lista atualizada
+-}
+
+adicionarDisciplina :: Alunos -> IO Alunos
+adicionarDisciplina alunos = do
+    putStrLn "\nNome do aluno:"
+    nome <- getLine
+    if nome `elem` map nomeAluno alunos
+        then do
+            putStrLn "Nome da disciplina:"
+            nomeDisc <- getLine
+            putStrLn "Média de aprovação:"
+            media <- readLn
+            putStrLn "Peso da média final:"
+            pesoMF <- readLn
+            putStrLn "Peso da prova final:"
+            pesoPF <- readLn
+            let novaDisc = Disciplina { nomeDisciplina = nomeDisc, provas = [], pesoMediaFinal = pesoMF, pesoProvaFinal = pesoPF, mediaAprovacao = media }
+            let alunosAtualizados = map (\a -> if nomeAluno a == nome
+                                               then a { disciplinas = disciplinas a ++ [(novaDisc, Pendente)] }
+                                               else a) alunos
+            return alunosAtualizados
+        else do
+            putStrLn "Aluno não encontrado!"
+            return alunos
+{- 
+recebe a lista de alunos, pede o nome do aluno e os dados da disciplina,
+cria a disciplina e adiciona ela ao aluno correspondente, retornando a lista atualizada
 -}
 
 
@@ -101,36 +141,47 @@ maiorMedia alunos =
 -- Calcular a disciplina mais difícil
 
 
-escolha :: Char -> IO()
-escolha letra
-   -- | toUpper letra == 'A' = adicionarMateria >> main
-   -- | toUpper letra == 'E' = editarMateria >> main
-   -- | toUpper letra == 'M' = mediaGeral >> main
-   -- | toUpper letra == 'T' = maiorMedia >> main
-   -- | toUpper letra == 'P' = porcentagemAP >> main                            
-   -- | toUpper letra == 'F' = notaNecessaria >> main
-   -- | toUpper letra == 'D' = disMaisDificil >> main
-   -- | toUpper letra == 'R' = ranking >> main
+escolha :: Char -> Alunos -> IO()
+escolha letra alunos
+    | toUpper letra == 'A' = do
+        alunosAtualizados <- adicionarAluno alunos 
+        loop alunosAtualizados
+    | toUpper letra == 'I' = do
+        alunosAtualizados <- adicionarDisciplina alunos
+        loop alunosAtualizados
+   -- | toUpper letra == 'E' = editarMateria >> loop alunos
+   -- | toUpper letra == 'M' = mediaGeral >> loop alunos
+    | toUpper letra == 'T' = maiorMedia alunos >> loop alunos
+   -- | toUpper letra == 'P' = porcentagemAP >> loop alunos                           
+   -- | toUpper letra == 'F' = notaNecessaria >> loop alunos
+   -- | toUpper letra == 'D' = disMaisDificil >> loop alunos
+   -- | toUpper letra == 'R' = ranking >> loop alunos
     | toUpper letra == 'S' = putStrLn "\nAté Mais!"
-    | otherwise = putStrLn "\nResposta Inválida" >> main
+    | otherwise = putStrLn "\nResposta Inválida" >> loop alunos
 
 
 
 -- main
-main :: IO()
-main = do
+
+loop :: Alunos -> IO()
+loop alunos = do
+        
     putStrLn "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
     putStrLn "         Sistema de Notas          "
     putStrLn "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
     putStrLn "Selecione uma opção:\n"
-    putStrLn ("Adicionar Matéria(A)\n\
-             \Editar Matéria(E)\n\
-             \Media Geral das Notas(M)\n\
-             \Maior Média(T)\n\
-             \Porcentagem de Aprovação(P)\n\
-             \Nota Necessaria na prova Final(F)\n\
-             \Disciplina mais Difícil(D)\n\
-             \Ranking de Notas(R)\n\
-             \Sair(S)\n")
+    putStrLn ("Adicionar Aluno(A)\n\
+        \Adicionar Disciplina(I)\n\
+        \Editar Matéria(E)\n\
+        \Media Geral das Notas(M)\n\
+        \Maior Média(T)\n\
+        \Porcentagem de Aprovação(P)\n\
+        \Nota Necessaria na prova Final(F)\n\
+        \Disciplina mais Difícil(D)\n\
+        \Ranking de Notas(R)\n\
+        \Sair(S)\n")
     letra <- getChar
-    escolha letra
+    escolha letra alunos
+
+main :: IO()
+main = loop []
