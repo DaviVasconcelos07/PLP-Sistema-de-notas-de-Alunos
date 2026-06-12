@@ -168,6 +168,11 @@ porcentagemAprovacao alunos = do
     let total = length alunos
     let porcentagem = fromIntegral aprovados / fromIntegral total * 100
     putStrLn ("Aprovados: " ++ show porcentagem ++ "%")
+{-
+    recebe a lista de alunos,
+    filtra os aprovados em todas as disciplinas com alunoAprovado,
+    calcula a porcentagem e exibe o resultado
+-}
 
 
 
@@ -177,6 +182,12 @@ disciplinaMaisDificil alunos = do
     let todasDisciplinas = concatMap (map fst . disciplinas) alunos -- concatena as disciplinas de todos os alunos
     let maisDificil = minimumBy (\a b -> compare (mediaPonderada (provas a)) (mediaPonderada (provas b))) todasDisciplinas -- vai comparando as médias ponderadas de todas as provas e volta a com a menor média
     putStrLn ("Disciplina mais difícil: " ++ nomeDisciplina maisDificil)
+{-
+    recebe a lista de alunos,
+    junta todas as disciplinas em uma lista só com concatMap,
+    compara as médias ponderadas com minimumBy,
+    e exibe a disciplina com a menor média
+-}
 
 
 
@@ -197,9 +208,16 @@ mostrarNotaNecessaria alunos = do
                 else do
                     let (disc, situacao) = head discEncontrada
                     case situacao of -- econtrou a disciplina e vai dizer a situação do aluno nela
-                        SemFinal -> putStrLn "Aluno já aprovado direto, não precisa de final!"
-                        Feita _  -> putStrLn "Aluno já fez a final!"
+                        SemFinal -> putStrLn "Aluno aprovado direto"
+                        Feita _  -> putStrLn "Aluno já fez a final"
                         Pendente -> putStrLn ("Nota necessária na final: " ++ show (notaNecessaria disc))
+{-
+    recebe a lista de alunos,
+    pede o nome do aluno e da disciplina,
+    verifica se existem na lista,
+    e exibe a situação do aluno na disciplina ou a nota necessária na final
+-}
+
 
 
 -- funcionalidades
