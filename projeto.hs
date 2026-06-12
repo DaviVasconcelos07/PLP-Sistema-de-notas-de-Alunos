@@ -9,7 +9,6 @@ import Data.List (sortBy, maximumBy, minimumBy)
 
 --tipos de dados
 
-
 data Prova = Prova
     { valorNota :: Double  -- nota que o cara tirou
     , pesoNota  :: Double  
@@ -40,8 +39,8 @@ type Alunos = [Aluno]
 
 
 
--- funções auxiliares
 
+-- funções auxiliares
 
 mediaPonderada :: [Prova] -> Double --recebe uma lista de provas e calcula a média ponderada
 mediaPonderada provas = sum (map (\p -> valorNota p * pesoNota p) provas)
@@ -86,6 +85,26 @@ alunoAprovado aluno = all disciplinaAprovada (disciplinas aluno)
 
 
 
+
+
+
+
+
+-- funcionalidades
+
+-- ✅ média ponderada configurável por disciplina
+
+-- ✅Calcular Ranking de notas
+
+-- ✅Calcular Porcentagem de Aprovação
+
+-- ✅Calcular e mostrar maior média
+
+-- ✅Calcular média geral das notas
+
+-- ✅Calcular nota necessária na final
+
+-- ✅Calcular a disciplina mais difícil
 
 
 maiorMedia :: Alunos -> IO()
@@ -220,22 +239,14 @@ mostrarNotaNecessaria alunos = do
 
 
 
--- funcionalidades
 
--- ✅ média ponderada configurável por disciplina
 
--- ✅Calcular Ranking de notas
 
--- ✅Calcular Porcentagem de Aprovação
 
--- ✅Calcular e mostrar maior média
 
--- ✅Calcular média geral das notas
 
--- ✅Calcular nota necessária na final
 
--- ✅Calcular a disciplina mais difícil
-
+-- Main
 
 escolha :: Char -> Alunos -> IO()
 escolha letra alunos

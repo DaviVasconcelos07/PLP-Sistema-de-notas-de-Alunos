@@ -20,31 +20,19 @@
 Main.hs
 │
 ├── 1. IMPORTS
-│   └── Módulos padrão do Haskell (Data.List, Data.Ord, etc.)
+│   └── Módulos padrão do Haskell (Data.Char, Data.List)
 │
 ├── 2. TIPOS DE DADOS
-│   └── Definição das estruturas: Aluno, Disciplina, NotaAluno, ProvaConfig
+│   └── Definição das estruturas: Aluno, Disciplina, Prova, ProvaFinal
 │
-├── 3. FUNÇÕES AUXILIARES / HELPERS
+├── 3. FUNÇÕES AUXILIARES
 │   └── Funções puras reutilizáveis de baixo nível
-│       (ex: somaComPesos, aprovado, zipComPeso)
+│       (ex: mediaPonderada, mediaAluno, aprovadoDireto, alunoAprovado)
 │
-├── 4. CÁLCULOS CORE
-│   └── Funções base das quais todas as features dependem
-│       (ex: calcularMediaPonderada, mediaAluno)
-│
-├── 5. FUNCIONALIDADES (F1–F8)
+├── 4. FUNCIONALIDADES
 │   └── Uma função por feature listada na tabela acima
 │
-├── 6. EXIBIÇÃO / FORMATAÇÃO
-│   └── Funções responsáveis por formatar a saída para o terminal
-│       — separa a lógica de apresentação da lógica de negócio
-│
-├── 7. DADOS DE TESTE
-│   └── Turma fictícia hardcoded para demonstração
-│       (alunos, disciplinas e notas pré-definidos)
-│
-└── 8. MAIN / I/O
+└── 5. MAIN / I/O
     └── Menu interativo em CLI para navegar pelas funcionalidades
 ```
 
@@ -60,8 +48,11 @@ Main.hs
 # Compilar
 ghc Main.hs -o sistema-notas
 
-# Executar
+# Executar no Linux/Mac
 ./sistema-notas
+
+# Executar no Windows
+sistema-notas.exe
 ```
 
 ### Ou executar diretamente com runghc
@@ -78,7 +69,7 @@ O projeto aplica os seguintes conceitos do paradigma funcional:
 
 - **Funções puras** — toda a lógica de negócio (cálculos, rankings, simulações) é implementada sem efeitos colaterais
 - **Imutabilidade** — nenhum dado é modificado; novas estruturas são derivadas a partir das existentes
-- **Funções de ordem superior** — uso de `map`, `filter`, `foldr`, `sortBy`, `groupBy`, entre outras
+- **Funções de ordem superior** — uso de `map`, `filter`, `sortBy`, `maximumBy`, `minimumBy`, entre outras
 - **Separação IO / lógica pura** — o `main` age apenas como um conector fino entre a entrada do usuário e as funções puras, respeitando a fronteira imposta pelo tipo `IO` do Haskell
 
 ---
