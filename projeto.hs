@@ -91,7 +91,7 @@ alunoAprovado aluno = all disciplinaAprovada (disciplinas aluno)
 maiorMedia :: Alunos -> IO()
 maiorMedia alunos = do
     let alunoMaior = maximumBy (\a b -> compare (mediaAluno a) (mediaAluno b)) alunos
-    putStrLn ("aluno com maior média: " ++ nomeAluno + alunoMaior ++ "; média: " ++ show (mediaAluno alunoMaior))
+    putStrLn ("aluno com maior média: " ++ nomeAluno alunoMaior ++ "; média: " ++ show (mediaAluno alunoMaior))
 {-
     recebe uma lista de Alunos,
     compara as médias de cada um com maximumBy,
@@ -125,7 +125,7 @@ adicionarDisciplina alunos = do
             pesoPF <- readLn
             let novaDisc = Disciplina { nomeDisciplina = nomeDisc, provas = [], pesoMediaFinal = pesoMF, pesoProvaFinal = pesoPF, mediaAprovacao = media }
             let alunosAtualizados = map (\a -> if nomeAluno a == nome
-                                               then a { disciplinas = disciplinas a ++ [(novaDisc, SemFinal] }
+                                               then a { disciplinas = disciplinas a ++ [(novaDisc, SemFinal)] }
                                                else a) alunos
             return alunosAtualizados
         else do
@@ -232,7 +232,7 @@ mostrarNotaNecessaria alunos = do
 
 -- ✅Calcular média geral das notas
 
--- Calcular nota necessária na final
+-- ✅Calcular nota necessária na final
 
 -- ✅Calcular a disciplina mais difícil
 
@@ -248,9 +248,9 @@ escolha letra alunos
    -- | toUpper letra == 'E' = editarMateria >> loop alunos
     | toUpper letra == 'M' = mostrarMediaGeral alunos >> loop alunos
     | toUpper letra == 'T' = maiorMedia alunos >> loop alunos
-   -- | toUpper letra == 'P' = porcentagemAP >> loop alunos                           
-   -- | toUpper letra == 'F' = notaNecessaria >> loop alunos
-   -- | toUpper letra == 'D' = disMaisDificil >> loop alunos
+    | toUpper letra == 'P' = porcentagemAprovacao alunos >> loop alunos                           
+    | toUpper letra == 'F' = mostrarNotaNecessaria alunos >> loop alunos
+    | toUpper letra == 'D' = disciplinaMaisDificil alunos >> loop alunos
     | toUpper letra == 'R' = ranking alunos >> loop alunos
     | toUpper letra == 'S' = putStrLn "\nAté Mais!"
     | otherwise = putStrLn "\nResposta Inválida" >> loop alunos
