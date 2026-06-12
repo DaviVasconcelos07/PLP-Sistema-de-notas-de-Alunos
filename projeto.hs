@@ -90,12 +90,12 @@ alunoAprovado aluno = all disciplinaAprovada (disciplinas aluno)
 
 maiorMedia :: Alunos -> IO()
 maiorMedia alunos = do
-    print(maximum (map mediaAluno alunos))
+    let alunoMaior = maximumBy (\a b -> compare (mediaAluno a) (mediaAluno b)) alunos
+    putStrLn ("aluno com maior média: " ++ nomeAluno + alunoMaior ++ "; média: " ++ show (mediaAluno alunoMaior))
 {-
     recebe uma lista de Alunos,
-    calcula a média de cada um com mediaAluno,
-    monta uma lista dessas médias,
-    e retorna a maior delas com maximum
+    compara as médias de cada um com maximumBy,
+    e retorna o aluno com a maior média com seu nome e média
 -}
 
 adicionarAluno :: Alunos -> IO Alunos
