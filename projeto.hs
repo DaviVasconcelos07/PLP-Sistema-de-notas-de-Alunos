@@ -179,6 +179,29 @@ disciplinaMaisDificil alunos = do
     putStrLn ("Disciplina mais difícil: " ++ nomeDisciplina maisDificil)
 
 
+
+mostrarNotaNecessaria :: Alunos -> IO() -- o usuário passa o nome de um aluno, passa a disciplina que quer consultar e o método fala o estado atual do aluno ou a nota necessária
+mostrarNotaNecessaria alunos = do
+    putStrLn "\nNome do aluno:"
+    nome <- getLine
+    let alunoEncontrado = filter (\a -> nomeAluno a == nome) alunos -- buscando se o aluno existe
+    if null alunoEncontrado
+        then putStrLn "Aluno não encontrado!"
+        else do
+            let aluno = head alunoEncontrado
+            putStrLn "Nome da disciplina:"
+            nomeDisc <- getLine
+            let discEncontrada = filter (\(d, _) -> nomeDisciplina d == nomeDisc) (disciplinas aluno) -- procurando se a disciplina exite
+            if null discEncontrada
+                then putStrLn "Disciplina não encontrada!"
+                else do
+                    let (disc, situacao) = head discEncontrada
+                    case situacao of -- econtrou a disciplina e vai dizer a situação do aluno nela
+                        SemFinal -> putStrLn "Aluno já aprovado direto, não precisa de final!"
+                        Feita _  -> putStrLn "Aluno já fez a final!"
+                        Pendente -> putStrLn ("Nota necessária na final: " ++ show (notaNecessaria disc))
+
+
 -- funcionalidades
 
 -- ✅ média ponderada configurável por disciplina
