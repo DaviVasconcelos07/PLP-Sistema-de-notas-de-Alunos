@@ -1,6 +1,6 @@
 --imports
 import Data.Char (toUpper)
-import Data.List (sortBy)
+import Data.List (sortBy, maximumBy, minimumBy)
 
 
 
@@ -72,6 +72,20 @@ mediaGeralNotas alunos =
     monta uma lista com essas médias,
     e o caba tira a média geral com mediaLista
 -}
+
+
+disciplinaAprovada :: (Disciplina, ProvaFinal) -> Bool -- faz o calulco e mostra se o aluno passou em uma disciplina especifica
+disciplinaAprovada (disciplina, SemFinal)  = aprovadoDireto disciplina
+disciplinaAprovada (disciplina, Pendente)  = False
+disciplinaAprovada (disciplina, Feita nota) = (mediaPonderada (provas disciplina) * pesoMediaFinal disciplina) + 
+                                                (nota * pesoProvaFinal disciplina) >= mediaAprovacao disciplina
+
+alunoAprovado :: Aluno -> Bool -- basicamente diz se um aluno está aprovado em todas as disciplinas
+alunoAprovado aluno = all disciplinaAprovada (disciplinas aluno) 
+
+
+
+
 
 
 maiorMedia :: Alunos -> IO()
@@ -148,13 +162,30 @@ ranking alunos = do
 -}
 
 
+porcentagemAprovacao :: Alunos -> IO() -- volta a porcentagem de alunos aprovados em todas as disciplinas
+porcentagemAprovacao alunos = do
+    let aprovados = length (filter alunoAprovado alunos)
+    let total = length alunos
+    let porcentagem = fromIntegral aprovados / fromIntegral total * 100
+    putStrLn ("Aprovados: " ++ show porcentagem ++ "%")
+
+
+
+
+disciplinaMaisDificil :: Alunos -> IO() 
+disciplinaMaisDificil alunos = do
+    let todasDisciplinas = concatMap (map fst . disciplinas) alunos -- concatena as disciplinas de todos os alunos
+    let maisDificil = minimumBy (\a b -> compare (mediaPonderada (provas a)) (mediaPonderada (provas b))) todasDisciplinas -- vai comparando as médias ponderadas de todas as provas e volta a com a menor média
+    putStrLn ("Disciplina mais difícil: " ++ nomeDisciplina maisDificil)
+
+
 -- funcionalidades
 
 -- ✅ média ponderada configurável por disciplina
 
 -- ✅Calcular Ranking de notas
 
--- Calcular Porcentagem de Aprovação
+-- ✅Calcular Porcentagem de Aprovação
 
 -- ✅Calcular e mostrar maior média
 
@@ -162,7 +193,7 @@ ranking alunos = do
 
 -- Calcular nota necessária na final
 
--- Calcular a disciplina mais difícil
+-- ✅Calcular a disciplina mais difícil
 
 
 escolha :: Char -> Alunos -> IO()
