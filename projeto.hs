@@ -125,7 +125,7 @@ adicionarDisciplina alunos = do
             pesoPF <- readLn
             let novaDisc = Disciplina { nomeDisciplina = nomeDisc, provas = [], pesoMediaFinal = pesoMF, pesoProvaFinal = pesoPF, mediaAprovacao = media }
             let alunosAtualizados = map (\a -> if nomeAluno a == nome
-                                               then a { disciplinas = disciplinas a ++ [(novaDisc, Pendente)] }
+                                               then a { disciplinas = disciplinas a ++ [(novaDisc, SemFinal] }
                                                else a) alunos
             return alunosAtualizados
         else do
