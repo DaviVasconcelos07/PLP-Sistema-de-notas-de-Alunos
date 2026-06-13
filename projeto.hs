@@ -135,14 +135,14 @@ alunoAprovado aluno = all disciplinaAprovada (notas aluno)
 -- ✅Calcular a disciplina mais difícil
 
 
-maiorMedia :: Alunos -> IO()
+maiorMedia :: [Aluno] -> IO ()
 maiorMedia alunos = do
     let alunoMaior = maximumBy (\a b -> compare (mediaAluno a) (mediaAluno b)) alunos
-    putStrLn ("aluno com maior média: " ++ nomeAluno alunoMaior ++ "; média: " ++ show (mediaAluno alunoMaior))
+    putStrLn ("Aluno destaque: " ++ nomeAluno alunoMaior ++ " | média: " ++ show (mediaAluno alunoMaior))
 {-
-    recebe uma lista de Alunos,
-    compara as médias de cada um com maximumBy,
-    e retorna o aluno com a maior média com seu nome e média
+    recebe a lista de alunos,
+    encontra o de maior média com maximumBy,
+    e exibe o nome e a média
 -}
 
 adicionarAluno :: Alunos -> IO Alunos
