@@ -177,41 +177,37 @@ adicionarDisciplina (discs, alunos) = do
 -}
 
 
-mostrarMediaGeral :: Alunos -> IO()
+mostrarMediaGeral :: [Aluno] -> IO ()
 mostrarMediaGeral alunos = do
-    print (mediaGeralNotas alunos)
-{- 
-    recebe a lista de alunos,
-    calcula a média geral das notas,
-    e mostra o resultado na tela
--}
-
-
-ranking :: Alunos -> IO()
-ranking alunos = do
-    let ordenados =
-            sortBy (\a b -> compare (mediaAluno b) (mediaAluno a)) alunos
-
-    mapM_ (\a ->
-        putStrLn (nomeAluno a ++ " - " ++ show (mediaAluno a)))
-        ordenados
-{- 
-    recebe a lista de alunos,
-    ordena da maior média para a menor,
-    e mostra o ranking na tela
--}
-
-
-porcentagemAprovacao :: Alunos -> IO() -- volta a porcentagem de alunos aprovados em todas as disciplinas
-porcentagemAprovacao alunos = do
-    let aprovados = length (filter alunoAprovado alunos)
-    let total = length alunos
-    let porcentagem = fromIntegral aprovados / fromIntegral total * 100
-    putStrLn ("Aprovados: " ++ show porcentagem ++ "%")
+    putStrLn ("Média geral da turma: " ++ show (mediaGeralNotas alunos))
 {-
     recebe a lista de alunos,
-    filtra os aprovados em todas as disciplinas com alunoAprovado,
-    calcula a porcentagem e exibe o resultado
+    calcula a média geral das notas com mediaGeralNotas,
+    e exibe o resultado na tela
+-}
+
+
+ranking :: [Aluno] -> IO ()
+ranking alunos = do
+    let ordenados = sortBy (\a b -> compare (mediaAluno b) (mediaAluno a)) alunos
+    mapM_ (\a -> putStrLn (nomeAluno a ++ " - " ++ show (mediaAluno a))) ordenados
+{-
+    recebe a lista de alunos,
+    ordena da maior média para a menor com sortBy,
+    e exibe o ranking na tela
+-}
+
+
+porcentagemAprovacao :: [Aluno] -> IO ()
+-- calcula e exibe a porcentagem de alunos aprovados em todas as disciplinas
+porcentagemAprovacao alunos = do
+    let aprovados   = length (filter alunoAprovado alunos)
+    let total       = length alunos
+    let porcentagem = fromIntegral aprovados / fromIntegral total * 100 :: Double
+    putStrLn ("Aprovados: " ++ show porcentagem ++ "%")
+{-
+    filtra os alunos aprovados em todas as disciplinas com alunoAprovado,
+    calcula a porcentagem sobre o total e exibe o resultado
 -}
 
 
