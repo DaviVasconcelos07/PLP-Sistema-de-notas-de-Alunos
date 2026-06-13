@@ -61,8 +61,14 @@ aprovadoDireto n = mediaPonderada (provas n) >= mediaAprovacao (disciplina n)
     e compara com a média mínima de aprovação da disciplina
 -}
 
-notaNecessaria :: Disciplina -> Double -- só faz sentido chamar isso se o aluno não for aprovado direto. tem que especificar no menu
-notaNecessaria disciplina = (mediaAprovacao disciplina - mediaPonderada (provas disciplina) * pesoMediaFinal disciplina) / pesoProvaFinal disciplina
+notaNecessaria :: NotasAluno -> Double
+-- só faz sentido chamar se o aluno não for aprovado direto; verificar antes de usar
+notaNecessaria n = (mediaAprovacao (disciplina n) - mediaPonderada (provas n) * pesoMediaFinal (disciplina n)) / pesoProvaFinal (disciplina n)
+{-
+    recebe as notas do aluno em uma disciplina,
+    calcula qual nota ele precisaria tirar na prova final para ser aprovado,
+    levando em conta os pesos da média regular e da prova final
+-}
 
 mediaLista :: [Double] -> Double
 mediaLista lista = sum lista / fromIntegral (length lista)
