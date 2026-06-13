@@ -36,11 +36,29 @@ Main.hs
     └── Menu interativo em CLI para navegar pelas funcionalidades
 ```
 
+## Instalação do GHC
+
+### Mac
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
+```
+
+Após a instalação, feche e reabra o terminal para atualizar o PATH.
+
+### Windows
+
+Abra o PowerShell como administrador e execute:
+
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force;[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; try { & ([ScriptBlock]::Create((Invoke-WebRequest https://www.haskell.org/ghcup/sh/bootstrap-haskell.ps1 -UseBasicParsing))) -Interactive -DisableCurl } catch { Write-Error $_ }
+```
+
+Após a instalação, feche e reabra o terminal para atualizar o PATH.
+
+---
+
 ## Como Executar
-
-### Pré-requisitos
-
-- [GHC](https://www.haskell.org/ghc/) (Glasgow Haskell Compiler) instalado
 
 ### Compilar e executar
 
