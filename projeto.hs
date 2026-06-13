@@ -145,15 +145,15 @@ maiorMedia alunos = do
     e exibe o nome e a média
 -}
 
-adicionarAluno :: Alunos -> IO Alunos
+adicionarAluno :: [Aluno] -> IO [Aluno]
 adicionarAluno alunos = do
     putStrLn "\nNome do aluno:"
     nome <- getLine
-    let novoAluno = Aluno { nomeAluno = nome, disciplinas = [] }
+    let novoAluno = Aluno { nomeAluno = nome, notas = [] }
     return (alunos ++ [novoAluno])
 {-
-recebe a lista de alunos, pede o nome, 
-cria um aluno sem disciplinas, concatena na lista atual retorna a lista atualizada
+    pede o nome do aluno,
+    cria um aluno sem notas ainda e concatena na lista atual
 -}
 
 adicionarDisciplina :: Alunos -> IO Alunos
