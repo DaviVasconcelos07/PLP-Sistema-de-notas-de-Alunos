@@ -64,7 +64,7 @@ Após a instalação, feche e reabra o terminal para atualizar o PATH.
 
 ```bash
 # Compilar
-ghc Main.hs -o sistema-notas
+ghc projeto.hs -o sistema-notas
 
 # Executar no Linux/Mac
 ./sistema-notas
@@ -76,7 +76,7 @@ sistema-notas.exe
 ### Ou executar diretamente com runghc
 
 ```bash
-runghc Main.hs
+runghc projeto.hs
 ```
 
 ---
