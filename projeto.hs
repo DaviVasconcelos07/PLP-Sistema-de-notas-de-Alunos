@@ -84,14 +84,12 @@ mediaAluno aluno
     se o aluno não tiver disciplinas cadastradas, retorna 0.0
 -}
 
-mediaGeralNotas :: Alunos -> Double
-mediaGeralNotas alunos =
-    mediaLista (map mediaAluno alunos)
+mediaGeralNotas :: [Aluno] -> Double
+mediaGeralNotas alunos = mediaLista (map mediaAluno alunos)
 {-
-    recebe uma lista de Alunos,
-    calcula a média de cada aluno usando mediaAluno,
-    monta uma lista com essas médias,
-    e o caba tira a média geral com mediaLista
+    recebe a lista de alunos,
+    calcula a média individual de cada aluno com mediaAluno,
+    e tira a média geral com mediaLista
 -}
 
 
