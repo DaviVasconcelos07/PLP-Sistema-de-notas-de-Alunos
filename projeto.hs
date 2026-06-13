@@ -213,46 +213,44 @@ porcentagemAprovacao alunos = do
 
 
 
-disciplinaMaisDificil :: Alunos -> IO() 
+disciplinaMaisDificil :: [Aluno] -> IO ()
 disciplinaMaisDificil alunos = do
-    let todasDisciplinas = concatMap (map fst . disciplinas) alunos
-    if null todasDisciplinas
+    let todasNotas = concatMap notas alunos
+    if null todasNotas
         then putStrLn "Nenhuma disciplina cadastrada!"
         else do
-            let maisDificil = minimumBy (\a b -> compare (mediaPonderada (provas a)) (mediaPonderada (provas b))) todasDisciplinas
-            putStrLn ("Disciplina mais difícil: " ++ nomeDisciplina maisDificil)
+            let maisDificil = minimumBy (\a b -> compare (mediaPonderada (provas a)) (mediaPonderada (provas b))) todasNotas
+            putStrLn ("Disciplina mais difícil: " ++ nomeDisciplina (disciplina maisDificil))
 {-
-    recebe a lista de alunos,
-    junta todas as disciplinas em uma lista só com concatMap,
-    se não houver disciplinas cadastradas, avisa o usuário,
-    caso contrário compara as médias ponderadas com minimumBy,
-    e exibe a disciplina com a menor média
+    coleta todos os NotasAluno de todos os alunos com concatMap,
+    encontra o de menor média ponderada com minimumBy,
+    e exibe o nome da disciplina correspondente
 -}
 
 
 
-mostrarNotaNecessaria :: Alunos -> IO() -- o usuário passa o nome de um aluno, passa a disciplina que quer consultar e o método fala o estado atual do aluno ou a nota necessária
+mostrarNotaNecessaria :: [Aluno] -> IO ()
+-- pede nome do aluno e da disciplina; exibe a situação ou a nota necessária na final
 mostrarNotaNecessaria alunos = do
     putStrLn "\nNome do aluno:"
     nome <- getLine
-    let alunoEncontrado = filter (\a -> nomeAluno a == nome) alunos -- buscando se o aluno existe
+    let alunoEncontrado = filter (\a -> nomeAluno a == nome) alunos
     if null alunoEncontrado
         then putStrLn "Aluno não encontrado!"
         else do
             let aluno = head alunoEncontrado
             putStrLn "Nome da disciplina:"
             nomeDisc <- getLine
-            let discEncontrada = filter (\(d, _) -> nomeDisciplina d == nomeDisc) (disciplinas aluno) -- procurando se a disciplina exite
-            if null discEncontrada
+            let notasEncontradas = filter (\n -> nomeDisciplina (disciplina n) == nomeDisc) (notas aluno)
+            if null notasEncontradas
                 then putStrLn "Disciplina não encontrada!"
                 else do
-                    let (disc, situacao) = head discEncontrada
-                    case situacao of -- econtrou a disciplina e vai dizer a situação do aluno nela
+                    let n = head notasEncontradas
+                    case provaFinal n of
                         SemFinal -> putStrLn "Aluno aprovado direto"
                         Feita _  -> putStrLn "Aluno já fez a final"
-                        Pendente -> putStrLn ("Nota necessária na final: " ++ show (notaNecessaria disc))
+                        Pendente -> putStrLn ("Nota necessária na final: " ++ show (notaNecessaria n))
 {-
-    recebe a lista de alunos,
     pede o nome do aluno e da disciplina,
     verifica se existem na lista,
     e exibe a situação do aluno na disciplina ou a nota necessária na final
