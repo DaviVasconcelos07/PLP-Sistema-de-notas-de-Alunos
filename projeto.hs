@@ -156,31 +156,24 @@ adicionarAluno alunos = do
     cria um aluno sem notas ainda e concatena na lista atual
 -}
 
-adicionarDisciplina :: Alunos -> IO Alunos
-adicionarDisciplina alunos = do
-    putStrLn "\nNome do aluno:"
-    nome <- getLine
-    if nome `elem` map nomeAluno alunos
-        then do
-            putStrLn "Nome da disciplina:"
-            nomeDisc <- getLine
-            putStrLn "Média de aprovação:"
-            media <- readLn
-            putStrLn "Peso da média final:"
-            pesoMF <- readLn
-            putStrLn "Peso da prova final:"
-            pesoPF <- readLn
-            let novaDisc = Disciplina { nomeDisciplina = nomeDisc, provas = [], pesoMediaFinal = pesoMF, pesoProvaFinal = pesoPF, mediaAprovacao = media }
-            let alunosAtualizados = map (\a -> if nomeAluno a == nome
-                                               then a { disciplinas = disciplinas a ++ [(novaDisc, SemFinal)] }
-                                               else a) alunos
-            return alunosAtualizados
-        else do
-            putStrLn "Aluno não encontrado!"
-            return alunos
-{- 
-recebe a lista de alunos, pede o nome do aluno e os dados da disciplina,
-cria a disciplina e adiciona ela ao aluno correspondente, retornando a lista atualizada
+adicionarDisciplina :: Turma -> IO Turma
+adicionarDisciplina (discs, alunos) = do
+    putStrLn "\nNome da disciplina:"
+    nomeDisc <- getLine
+    putStrLn "Média de aprovação:"
+    media <- readLn
+    putStrLn "Peso da média regular:"
+    pesoMF <- readLn
+    putStrLn "Peso da prova final:"
+    pesoPF <- readLn
+    let novaDisc  = Disciplina { nomeDisciplina = nomeDisc, pesoMediaFinal = pesoMF, pesoProvaFinal = pesoPF, mediaAprovacao = media }
+    let notaVazia = NotasAluno  { disciplina = novaDisc, provas = [], provaFinal = SemFinal }
+    let alunosAtualizados = map (\a -> a { notas = notas a ++ [notaVazia] }) alunos
+    return (discs ++ [novaDisc], alunosAtualizados)
+{-
+    pede a configuração da disciplina (nome, pesos, média mínima),
+    adiciona a disciplina à lista da turma,
+    e cria um NotasAluno vazio (sem provas, SemFinal) para cada aluno já cadastrado
 -}
 
 
