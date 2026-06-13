@@ -93,14 +93,22 @@ mediaGeralNotas alunos = mediaLista (map mediaAluno alunos)
 -}
 
 
-disciplinaAprovada :: (Disciplina, ProvaFinal) -> Bool -- faz o calulco e mostra se o aluno passou em uma disciplina especifica
-disciplinaAprovada (disciplina, SemFinal)  = aprovadoDireto disciplina
-disciplinaAprovada (disciplina, Pendente)  = False
-disciplinaAprovada (disciplina, Feita nota) = (mediaPonderada (provas disciplina) * pesoMediaFinal disciplina) + 
-                                                (nota * pesoProvaFinal disciplina) >= mediaAprovacao disciplina
+disciplinaAprovada :: NotasAluno -> Bool -- verifica se o aluno foi aprovado em uma disciplina, considerando os três casos de ProvaFinal
+disciplinaAprovada n = case provaFinal n of
+    SemFinal   -> aprovadoDireto n
+    Pendente   -> False
+    Feita nota -> (mediaPonderada (provas n) * pesoMediaFinal (disciplina n))
+               +  (nota              * pesoProvaFinal (disciplina n))
+               >= mediaAprovacao (disciplina n)
+{-
+    SemFinal: aprovado direto pela média regular
+    Pendente: ainda não fez a final, considerado reprovado
+    Feita:    calcula a nota final ponderada e compara com a mínima
+-}
 
-alunoAprovado :: Aluno -> Bool -- basicamente diz se um aluno está aprovado em todas as disciplinas
-alunoAprovado aluno = all disciplinaAprovada (disciplinas aluno) 
+alunoAprovado :: Aluno -> Bool
+-- retorna True se o aluno está aprovado em todas as suas disciplinas
+alunoAprovado aluno = all disciplinaAprovada (notas aluno)
 
 
 
