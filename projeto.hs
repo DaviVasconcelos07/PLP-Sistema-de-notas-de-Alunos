@@ -10,29 +10,37 @@ import Data.List (sortBy, maximumBy, minimumBy)
 --tipos de dados
 
 data Prova = Prova
-    { valorNota :: Double  -- nota que o cara tirou
-    , pesoNota  :: Double  
+    { valorNota :: Double  -- nota que o aluno tirou
+    , pesoNota  :: Double  -- peso dessa prova no cálculo da média
     } deriving (Show)
 
-data ProvaFinal = SemFinal         -- não precisou fazer
-               | Pendente                -- vai fazer mas ainda não fez
-               | Feita Double     -- nota dele
+data ProvaFinal = SemFinal      -- aluno foi aprovado direto, não precisa fazer final
+               | Pendente       -- vai fazer a final, mas ainda não fez
+               | Feita Double   -- já fez a final; guarda a nota
                deriving (Show)
 
+-- configuração da disciplina, definida uma vez e compartilhada por toda a turma
 data Disciplina = Disciplina
-    { nomeDisciplina  :: String   
-    , provas          :: [Prova]  
-    , pesoMediaFinal  :: Double   -- peso da média regular na conta final
-    , pesoProvaFinal  :: Double   -- peso da prova final na conta final
-    , mediaAprovacao  :: Double   -- nota mínima pra aprovação
+    { nomeDisciplina :: String
+    , pesoMediaFinal :: Double  -- peso da média regular na nota final
+    , pesoProvaFinal :: Double  -- peso da prova final na nota final
+    , mediaAprovacao :: Double  -- nota mínima para aprovação
+    } deriving (Show)
+
+-- notas de um aluno em uma disciplina específica
+data NotasAluno = NotasAluno
+    { disciplina :: Disciplina  -- referência à configuração da disciplina
+    , provas     :: [Prova]     -- provas realizadas pelo aluno
+    , provaFinal :: ProvaFinal  -- situação do aluno na prova final
     } deriving (Show)
 
 data Aluno = Aluno
-    { nomeAluno   :: String                    
-    , disciplinas :: [(Disciplina, ProvaFinal)] -- disciplina + situação da final
+    { nomeAluno :: String
+    , notas     :: [NotasAluno] -- notas do aluno em cada disciplina
     } deriving (Show)
 
-type Alunos = [Aluno]
+-- estado global da aplicação: disciplinas da turma + lista de alunos
+type Turma = ([Disciplina], [Aluno])
 
 
 
@@ -45,8 +53,13 @@ type Alunos = [Aluno]
 mediaPonderada :: [Prova] -> Double --recebe uma lista de provas e calcula a média ponderada
 mediaPonderada provas = sum (map (\p -> valorNota p * pesoNota p) provas)
 
-aprovadoDireto :: Disciplina -> Bool
-aprovadoDireto disciplina = mediaPonderada (provas disciplina) >= mediaAprovacao disciplina
+aprovadoDireto :: NotasAluno -> Bool
+aprovadoDireto n = mediaPonderada (provas n) >= mediaAprovacao (disciplina n)
+{-
+    recebe as notas do aluno em uma disciplina,
+    calcula a média ponderada das provas,
+    e compara com a média mínima de aprovação da disciplina
+-}
 
 notaNecessaria :: Disciplina -> Double -- só faz sentido chamar isso se o aluno não for aprovado direto. tem que especificar no menu
 notaNecessaria disciplina = (mediaAprovacao disciplina - mediaPonderada (provas disciplina) * pesoMediaFinal disciplina) / pesoProvaFinal disciplina
