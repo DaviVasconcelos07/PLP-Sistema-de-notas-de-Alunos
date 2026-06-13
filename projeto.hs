@@ -145,15 +145,17 @@ maiorMedia alunos = do
     e exibe o nome e a média
 -}
 
-adicionarAluno :: [Aluno] -> IO [Aluno]
-adicionarAluno alunos = do
+adicionarAluno :: Turma -> IO Turma
+adicionarAluno (discs, alunos) = do
     putStrLn "\nNome do aluno:"
     nome <- getLine
-    let novoAluno = Aluno { nomeAluno = nome, notas = [] }
-    return (alunos ++ [novoAluno])
+    let notasIniciais = map (\d -> NotasAluno { disciplina = d, provas = [], provaFinal = SemFinal }) discs
+    let novoAluno     = Aluno { nomeAluno = nome, notas = notasIniciais }
+    return (discs, alunos ++ [novoAluno])
 {-
     pede o nome do aluno,
-    cria um aluno sem notas ainda e concatena na lista atual
+    cria um NotasAluno vazio para cada disciplina já cadastrada na turma,
+    e adiciona o aluno à lista
 -}
 
 adicionarDisciplina :: Turma -> IO Turma
@@ -267,38 +269,37 @@ mostrarNotaNecessaria alunos = do
 
 -- Main
 
-escolha :: Char -> Alunos -> IO()
-escolha letra alunos
+escolha :: Char -> Turma -> IO ()
+escolha letra turma@(_, alunos)
     | toUpper letra == 'A' = do
-        alunosAtualizados <- adicionarAluno alunos 
-        loop alunosAtualizados
+        turmaAtualizada <- adicionarAluno turma
+        loop turmaAtualizada
     | toUpper letra == 'I' = do
-        alunosAtualizados <- adicionarDisciplina alunos
-        loop alunosAtualizados
-   -- | toUpper letra == 'E' = editarMateria >> loop alunos
-    | toUpper letra == 'M' = mostrarMediaGeral alunos >> loop alunos
-    | toUpper letra == 'T' = maiorMedia alunos >> loop alunos
-    | toUpper letra == 'P' = porcentagemAprovacao alunos >> loop alunos                           
-    | toUpper letra == 'F' = mostrarNotaNecessaria alunos >> loop alunos
-    | toUpper letra == 'D' = disciplinaMaisDificil alunos >> loop alunos
-    | toUpper letra == 'R' = ranking alunos >> loop alunos
+        turmaAtualizada <- adicionarDisciplina turma
+        loop turmaAtualizada
+   -- | toUpper letra == 'E' = editarMateria >> loop turma
+    | toUpper letra == 'M' = mostrarMediaGeral alunos >> loop turma
+    | toUpper letra == 'T' = maiorMedia alunos        >> loop turma
+    | toUpper letra == 'P' = porcentagemAprovacao alunos >> loop turma
+    | toUpper letra == 'F' = mostrarNotaNecessaria alunos >> loop turma
+    | toUpper letra == 'D' = disciplinaMaisDificil alunos >> loop turma
+    | toUpper letra == 'R' = ranking alunos           >> loop turma
     | toUpper letra == 'S' = putStrLn "\nAté Mais!"
-    | otherwise = putStrLn "\nResposta Inválida" >> loop alunos
+    | otherwise             = putStrLn "\nResposta Inválida" >> loop turma
 
 
 
 -- main
 
-loop :: Alunos -> IO()
-loop alunos = do
-        
+loop :: Turma -> IO ()
+loop turma = do
+
     putStrLn "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
     putStrLn "         Sistema de Notas          "
     putStrLn "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
     putStrLn "Selecione uma opção:\n"
     putStrLn ("Adicionar Aluno(A)\n\
         \Adicionar Disciplina(I)\n\
-        \Editar Matéria(E)\n\
         \Media Geral das Notas(M)\n\
         \Maior Média(T)\n\
         \Porcentagem de Aprovação(P)\n\
@@ -308,7 +309,7 @@ loop alunos = do
         \Sair(S)\n")
     letra <- getChar
     _ <- getLine
-    escolha letra alunos
+    escolha letra turma
 
-main :: IO()
-main = loop []
+main :: IO ()
+main = loop ([], [])
