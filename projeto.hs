@@ -75,13 +75,13 @@ mediaLista lista = sum lista / fromIntegral (length lista)
 
 mediaAluno :: Aluno -> Double
 mediaAluno aluno
-    | null (disciplinas aluno) = 0.0
-    | otherwise = mediaLista (map (\(d, _) -> mediaPonderada (provas d)) (disciplinas aluno))
-{- 
-    recebe um Aluno, extrai sua lista de (Disciplina, ProvaFinal),
-    desconsidera o ProvaFinal com (_), calcula a mediaPonderada de cada Disciplina,
-    e por fim tira a média dessas médias com mediaLista.
-    se o aluno não tiver disciplinas, retorna 0.0
+    | null (notas aluno) = 0.0
+    | otherwise = mediaLista (map (\n -> mediaPonderada (provas n)) (notas aluno))
+{-
+    recebe um Aluno, extrai sua lista de NotasAluno,
+    calcula a mediaPonderada das provas de cada disciplina,
+    e tira a média dessas médias com mediaLista.
+    se o aluno não tiver disciplinas cadastradas, retorna 0.0
 -}
 
 mediaGeralNotas :: Alunos -> Double
