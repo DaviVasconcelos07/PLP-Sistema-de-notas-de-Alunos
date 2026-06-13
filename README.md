@@ -97,7 +97,7 @@ O projeto aplica os seguintes conceitos do paradigma funcional:
 - Antonio Farias Lopes Neto
 - Carlos Alberto Leal Do Nascimento
 - João Victor Fernandes Martins
-- 
+- Gabriel Cavalcante Alves Costa
 - 
 
 Desenvolvido como projeto acadêmico para a disciplina de Paradigmas de Linguagem de Programação.
