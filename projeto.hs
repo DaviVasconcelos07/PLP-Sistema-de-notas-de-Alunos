@@ -55,11 +55,14 @@ mediaLista :: [Double] -> Double
 mediaLista lista = sum lista / fromIntegral (length lista)
 
 mediaAluno :: Aluno -> Double
-mediaAluno aluno = mediaLista (map (\(d, _) -> mediaPonderada (provas d)) (disciplinas aluno))
+mediaAluno aluno
+    | null (disciplinas aluno) = 0.0
+    | otherwise = mediaLista (map (\(d, _) -> mediaPonderada (provas d)) (disciplinas aluno))
 {- 
     recebe um Aluno, extrai sua lista de (Disciplina, ProvaFinal),
     desconsidera o ProvaFinal com (_), calcula a mediaPonderada de cada Disciplina,
-    e por fim tira a média dessas médias com mediaLista
+    e por fim tira a média dessas médias com mediaLista.
+    se o aluno não tiver disciplinas, retorna 0.0
 -}
 
 mediaGeralNotas :: Alunos -> Double
@@ -198,13 +201,17 @@ porcentagemAprovacao alunos = do
 
 disciplinaMaisDificil :: Alunos -> IO() 
 disciplinaMaisDificil alunos = do
-    let todasDisciplinas = concatMap (map fst . disciplinas) alunos -- concatena as disciplinas de todos os alunos
-    let maisDificil = minimumBy (\a b -> compare (mediaPonderada (provas a)) (mediaPonderada (provas b))) todasDisciplinas -- vai comparando as médias ponderadas de todas as provas e volta a com a menor média
-    putStrLn ("Disciplina mais difícil: " ++ nomeDisciplina maisDificil)
+    let todasDisciplinas = concatMap (map fst . disciplinas) alunos
+    if null todasDisciplinas
+        then putStrLn "Nenhuma disciplina cadastrada!"
+        else do
+            let maisDificil = minimumBy (\a b -> compare (mediaPonderada (provas a)) (mediaPonderada (provas b))) todasDisciplinas
+            putStrLn ("Disciplina mais difícil: " ++ nomeDisciplina maisDificil)
 {-
     recebe a lista de alunos,
     junta todas as disciplinas em uma lista só com concatMap,
-    compara as médias ponderadas com minimumBy,
+    se não houver disciplinas cadastradas, avisa o usuário,
+    caso contrário compara as médias ponderadas com minimumBy,
     e exibe a disciplina com a menor média
 -}
 
@@ -288,6 +295,7 @@ loop alunos = do
         \Ranking de Notas(R)\n\
         \Sair(S)\n")
     letra <- getChar
+    _ <- getLine
     escolha letra alunos
 
 main :: IO()
